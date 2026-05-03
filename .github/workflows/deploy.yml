@@ -67,11 +67,7 @@ jobs:
           name: hexo-public
           path: public
 
-      - name: Check key file
-        run: |
-          ls -l ~/.ssh/id_ed25519
-          head -n 3 ~/.ssh/id_ed25519
-
+    # ✔ 1. 写入 SSH key
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -83,7 +79,15 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
 
-      - name: Debug SSH connection
+    # ✔ 2. 检查 key 是否写成功（关键）
+      - name: Debug key file
+        run: |
+          ls -l ~/.ssh/
+          echo "===== KEY HEAD ====="
+          head -n 3 ~/.ssh/id_ed25519
+
+    # ✔ 3. 测试 SSH
+      - name: Test SSH connection
         run: ssh -vvv -i ~/.ssh/id_ed25519 ${{ secrets.USER }}@${{ secrets.HOST }} "echo OK"
 
       - name: Deploy to server
