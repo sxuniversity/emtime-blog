@@ -1,0 +1,51 @@
+node: 18.19.1
+npm: 9.2.0
+hexo-cli: 4.3.2
+
+name: Hexo Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node (MATCH OLD ENV)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.19.1
+
+      - name: Show version (debug)
+        run: |
+          node -v
+          npm -v
+
+      - name: Install dependencies (LOCKED)
+        run: npm ci
+
+      - name: Build Hexo
+        run: |
+          npx hexo clean
+          npx hexo generate
+
+      - name: Upload public
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
