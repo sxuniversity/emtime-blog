@@ -48,10 +48,37 @@ jobs:
         with:
           path: public
 
-  deploy:
+  deploy-pages:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
+
+  deploy-server:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: hexo-public
+          path: public
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to server
+        run: |
+          ssh -i ~/.ssh/id_ed25519 ${{ secrets.USER }}@${{ secrets.HOST }} "
+            rm -rf /www/wwwroot/xt.orangetime.top/* || true
+          "
+
+          rsync -avz -e "ssh -i ~/.ssh/id_ed25519" public/ \
+          ${{ secrets.USER }}@${{ secrets.HOST }}:/www/wwwroot/xt.orangetime.top/
