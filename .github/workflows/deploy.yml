@@ -26,6 +26,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # =========================
+      # 🔥 关键：临时替换 root
+      # =========================
+      - name: Patch root for GitHub Pages
+        run: |
+          sed -i 's|root: /|root: /emtime-blog/|' _config.yml
+
       - name: Build Hexo
         run: |
           npx hexo clean
