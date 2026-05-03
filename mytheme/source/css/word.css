@@ -1,0 +1,7 @@
+/* 调整 Markdown 渲染时中英文混排的间距行为 */
+.markdown-body {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal; /* 避免强制单行或预格式 */
+  line-break: anywhere; /* v4.1+浏览器支持更好地断行 */
+}

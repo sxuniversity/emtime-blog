@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Sitemap: https://blog.orangetime.top/sitemap.xml
+Sitemap: https://blog.orangetime.top/baidusitemap.xml

@@ -1,0 +1,92 @@
+<%
+const { enable: pjax_enable } = theme?.pjax || {}
+let {
+    env_id: tk_env_id,
+    region: tk_region,
+    version: tk_version
+} = theme?.comment?.twikoo || {}
+if (!tk_version) { tk_version = '1.6.36' }
+let twikoo_cdn_url = `//cdn.jsdelivr.net/npm/twikoo@${tk_version}/dist/twikoo.all.min.js`
+const { enable: t_cdn_enable, provider: t_cdn_provider } = theme?.cdn || {}
+
+if (t_cdn_enable === true) {
+    switch (t_cdn_provider) {
+        case 'jsdelivr':
+            twikoo_cdn_url = `//cdn.jsdelivr.net/npm/twikoo@${tk_version}/dist/twikoo.all.min.js`
+            break
+
+        case 'unpkg':
+            twikoo_cdn_url = `//unpkg.com/twikoo@${tk_version}/dist/twikoo.all.min.js`
+            break
+
+        case 'cdnjs':
+            if (!(/^(\d+)\.(\d+)\.(\d+)$/.test(tk_version))) {
+                tk_version = '1.6.36'
+            }
+            twikoo_cdn_url = `https://cdnjs.cloudflare.com/ajax/libs/twikoo/${tk_version}/twikoo.all.min.js`
+            break
+    }
+}
+%>
+<% if(tk_env_id) { %>
+    <div class="twikoo-container">
+        <div class="twikoo-comment-tip" style="padding: 10px; background: #fff8e1; border-left: 4px solid #ffc107; margin-bottom: 10px; color: #8a6d3b;">
+        💡 请正确填写您的邮箱，以确保能接收到来自本博客的评论回复通知～(*^▽^*)
+        </div>
+
+        <div id="twikoo-comment"></div>
+
+        <!-- <script 
+          data-host-id="1" 
+          data-auto-reg="true" 
+          data-login-token="" 
+          data-title="时光的轨迹互动反馈" 
+          data-logo="https://blog.orangetime.top/images/website.svg" 
+          data-theme-color="#1F883D"
+          data-close-width="48" 
+          data-close-height="48" 
+          data-open-width="380" 
+          data-open-height="580" 
+          data-welcome="欢迎访问我的博客,有什么可以直接反馈,看到会及时回复,也可以在评论区留言(*╹▽╹*)" 
+          data-position="left"
+          src="https://blogvoice.orangetime.top/widget.js" 
+          async 
+        ></script> -->
+
+        <script <%= pjax_enable === true ? 'data-pjax' : '' %>
+                src="<%= twikoo_cdn_url %>"
+                async
+                onerror="window.KeepCommentPlugin.loadFailHandle()"
+        ></script>
+        <script <%= pjax_enable === true ? 'data-pjax' : '' %>
+                async
+                onerror="window.KeepCommentPlugin.loadFailHandle()"
+        >
+          window.KeepCommentPlugin.initTwikoo = () => {
+            if (window?.twikoo) {
+              twikoo.init({
+                el: '#twikoo-comment',
+                envId: '<%= tk_env_id %>',
+                region: '<%= tk_region %>',
+                lang: '<%= config.language %>' || 'zh-CN'
+              })
+              window.KeepCommentPlugin.hideLoading()
+            } else {
+              setTimeout(() => {
+                window.KeepCommentPlugin.initTwikoo()
+              }, 1000)
+            }
+          }
+
+          if ('<%= pjax_enable %>' === 'true') {
+            setTimeout(() => {
+              window.KeepCommentPlugin.initTwikoo()
+            }, 1200)
+          } else {
+            window.addEventListener('DOMContentLoaded', window.KeepCommentPlugin.initTwikoo)
+          }
+        </script>
+    </div>
+<% } else { %>
+    <%- partial('../config-error', { comment_plugin: 'Twikoo' }) %>
+<% } %>

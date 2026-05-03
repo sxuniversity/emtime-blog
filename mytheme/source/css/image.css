@@ -1,0 +1,10 @@
+:root {
+  /* 设置图片居中 */
+  --post-img-align: 0 auto 0 0;
+
+  /* 如果想要居左 */
+  /* --post-img-align: 0 auto 0 0; */
+
+  /* 如果想要居右 */
+  /* --post-img-align: 0 0 0 auto; */
+}
