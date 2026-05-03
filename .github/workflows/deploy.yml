@@ -1,7 +1,14 @@
-name: Hexo Deploy
+name: Hexo CI Build & Deploy
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build:
@@ -11,17 +18,12 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Node (MATCH OLD ENV)
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 18.19.1
 
-      - name: Show version (debug)
-        run: |
-          node -v
-          npm -v
-
-      - name: Install dependencies (LOCKED)
+      - name: Install dependencies
         run: npm ci
 
       - name: Build Hexo
@@ -29,7 +31,19 @@ jobs:
           npx hexo clean
           npx hexo generate
 
-      - name: Upload public
+      # =========================
+      # ① 上传 public（你要下载的）
+      # =========================
+      - name: Upload public artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hexo-public
+          path: public
+
+      # =========================
+      # ② 上传 Pages 专用产物
+      # =========================
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: public
@@ -37,10 +51,6 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-
-    permissions:
-      pages: write
-      id-token: write
 
     steps:
       - name: Deploy to GitHub Pages
