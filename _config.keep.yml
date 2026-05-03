@@ -34,24 +34,10 @@ base_info:
 # e.g. to enable categories, you need to execute `hexo new page categories`
 # Use `||` to set icon for navigation menu, e.g. `home: / || fa-solid fa-home`
 menu:
-  主页: /                       # || fa-solid fa-home
-  分类:
-    children:
-      - MCU: /categories/mcu
-      - 图形库: /categories/graphic
-      - Docker: /categories/docker
-      - Linux: /categories/linux
-      - 嵌入式Linux: /categories/linux-embedded
-      - 杂项: /categories/other
-  # archives: /archives           # || fa-solid fa-box-archive
-  # tags: /tags                 # || fa-solid fa-tags
-  # categories: /categories     # || fa-solid fa-layer-group
-  友链: /links               # || fa-solid fa-link
-  # photos: /photos             # || fa-solid fa-image
-  # tools: /tools               # || fa-solid fa-tools
-  # 时间轴: /sitetime
-  关于我: /about               # || fa-solid fa-user-graduate
-  # ......
+  主页: /
+  分类: /categories
+  友链: /links
+  关于我: /about
 
 
 # ---------------------------------------------------------------------------------------
@@ -344,7 +330,7 @@ inject:
   enable: false  # Option values: true | false
   css:
     # - /css/image.css
-    - /css/word.css
+    # - /css/word.css
     # e.g.
     # - /css/custom-1.css
     # - /css/custom-2.css
