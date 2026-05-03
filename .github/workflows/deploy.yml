@@ -67,6 +67,11 @@ jobs:
           name: hexo-public
           path: public
 
+      - name: Check key file
+        run: |
+          ls -l ~/.ssh/id_ed25519
+          head -n 3 ~/.ssh/id_ed25519
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
