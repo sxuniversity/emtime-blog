@@ -1,5 +1,5 @@
 ---
-title: Docker部署Gogs（个人GIthub）
+title: Docker部署Gogs（个人Github）
 categories: docker
 date: 2024-08-16 16:29:55
 updated: 2024-08-19 22:40:08
